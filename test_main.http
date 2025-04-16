@@ -1,0 +1,72 @@
+# Test your FastAPI endpoints
+@bearerToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQ4MDU5MTMsInN1YiI6IjIifQ.RnWE1tyZXiagbtFm9Zg70S3_bZy9zuuRHmyFS6vsThs
+
+POST http://127.0.0.1:8000/api/v1/auth/login
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+username=supervisor@example.com&password=supervisor123
+###
+POST http://localhost:8000/api/v1/auth/refresh
+Content-Type: application/json
+
+{
+  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDUzODEyODIsInN1YiI6IjMiLCJyZWZyZXNoIjp0cnVlfQ.dXRs0XcljdsAOXDT-GgCqexi3VyxxoXydjYFdyP3rX4"
+}
+###
+
+POST http://localhost:8000/api/v1/auth/logout
+Authorization: Bearer {{bearerToken}}
+###
+GET http://127.0.0.1:8000/api/v1/users/
+Accept: application/json
+Authorization: Bearer {{bearerToken}}
+
+###
+POST http://localhost:8000/api/v1/roles/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "admin",
+  "description": "Usuario administrador"
+}
+###
+
+POST http://localhost:8000/api/v1/requests/
+Content-Type: application/json
+Authorization: Bearer {{bearerToken}}
+
+{
+
+  "description": "Prueba",
+  "status": "pendiente",
+  "expected_date":"2025-04-16",
+  "amount": 600
+}
+
+###
+GET http://localhost:8000/api/v1/requests/
+Content-Type: application/json
+Authorization: Bearer {{bearerToken}}
+
+###
+PUT http://localhost:8000/api/v1/requests/2/status
+Authorization: Bearer {{bearerToken}}
+Content-Type: application/json
+
+{
+    "status": "rechazado",
+  "comment": "comentario"
+}
+
+###
+GET http://localhost:8000/api/v1/audit/
+Content-Type: application/json
+Authorization: Bearer {{bearerToken}}
+
+###
+GET http://localhost:8000/api/v1/requests/report/csv/
+Content-Type: application/json
+Authorization: Bearer {{bearerToken}}
+
