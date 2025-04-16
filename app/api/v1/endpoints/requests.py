@@ -245,3 +245,47 @@ def download_request_report(
             "Content-Disposition": "attachment; filename=request_report.csv"
         }
     )
+
+
+@router.get("/user-stats/csv")
+def download_user_stats_report(
+    db: Session = Depends(deps.get_db),
+    current_user: schemas.user.User = Depends(deps.has_role("supervisor")),
+) -> Response:
+    """
+    Download user request statistics report in CSV format.
+    Only supervisors can access this endpoint.
+    """
+    # Execute the stored procedure
+    result = db.execute(
+        text("EXEC sp_GetUserRequestStats")
+    ).fetchall()
+
+    # Create CSV in memory
+    output = io.StringIO()
+    writer = csv.writer(output)
+    
+    # Write header
+    writer.writerow([
+        "User ID", "Email", "Name", 
+        "Total Requests", "Approved Requests", "Rejected Requests", "Pending Requests",
+        "Average Amount", "Max Amount", "Min Amount"
+    ])
+    
+    # Write data
+    for row in result:
+        writer.writerow([
+            row.UserId, row.UserEmail, row.UserName,
+            row.TotalRequests, row.ApprovedRequests, row.RejectedRequests, row.PendingRequests,
+            row.AverageAmount, row.MaxAmount, row.MinAmount
+        ])
+    
+    # Prepare response
+    output.seek(0)
+    return Response(
+        content=output.getvalue(),
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": "attachment; filename=user_stats_report.csv"
+        }
+    )

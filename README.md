@@ -1,70 +1,100 @@
-# FastAPI Purchase API
+# API de Compras con FastAPI
 
-A FastAPI-based REST API for purchase management with user authentication and role-based access control.
+Una API REST basada en FastAPI para la gestión de compras con autenticación de usuarios y control de acceso basado en roles.
 
-## Features
+## Características
 
-- User authentication with JWT
-- Role-based access control (Admin, Supervisor, User)
-- SQL Server database with SQLAlchemy ORM
-- Alembic for database migrations
-- Purchase request management
-- Request status tracking
-- Comment system for requests
-- Audit trail for request changes
-- CSV report generation
-- Modular project structure
+- Autenticación de usuarios con JWT
+- Control de acceso basado en roles (Administrador, Supervisor, Usuario)
+- Base de datos SQL Server con SQLAlchemy ORM
+- Migraciones de base de datos con Alembic
+- Gestión de solicitudes de compra
+- Seguimiento del estado de las solicitudes
+- Sistema de comentarios para solicitudes
+- Registro de auditoría de cambios
+- Generación de reportes en CSV
+- Estructura de proyecto modular
+- Contenedorización con Docker
 
-## Prerequisites
+## Requisitos Previos
 
 - Python 3.8+
 - SQL Server
-- pip (Python package manager)
+- pip (gestor de paquetes de Python)
+- Docker y Docker Compose (opcional)
 
-## Installation
+## Instalación
 
-1. Clone the repository:
+### Método Tradicional
+
+1. Clonar el repositorio:
 ```bash
 git clone https://github.com/ifbriceno1996br/back-api-web-purchase.git
 cd WebApiPurchase
 ```
 
-2. Create and activate a virtual environment:
+2. Crear y activar un entorno virtual:
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+source .venv/bin/activate  # En Windows: .venv\Scripts\activate
 ```
 
-3. Install dependencies:
+3. Instalar dependencias:
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Set up the database:
-- Create a SQL Server database
-- Update the database connection settings in `app/core/config.py` if needed
+4. Configurar la base de datos:
+- Crear una base de datos en SQL Server
+- Actualizar la configuración de conexión en `app/core/config.py` si es necesario
 
-5. Run database migrations:
+5. Ejecutar migraciones de la base de datos:
 ```bash
 alembic upgrade head
 ```
 
-## Running the Application
+### Método con Docker
 
-Start the FastAPI server:
+1. Clonar el repositorio:
+```bash
+git clone https://github.com/ifbriceno1996br/back-api-web-purchase.git
+cd WebApiPurchase
+```
+
+2. Construir las imágenes:
+```bash
+docker-compose build
+```
+
+3. Iniciar los contenedores:
+```bash
+docker-compose up -d
+```
+
+4. Ver los logs:
+```bash
+docker-compose logs -f
+```
+
+## Ejecución de la Aplicación
+
+### Método Tradicional
 ```bash
 uvicorn app.main:app --reload
 ```
 
-The API will be available at `http://localhost:8000`
+### Método con Docker
+La aplicación ya estará ejecutándose después de `docker-compose up -d`
 
-## API Documentation
+La API estará disponible en `http://localhost:8000`
 
-Once the server is running, you can access:
-- Swagger UI documentation: `http://localhost:8000/docs`
-- ReDoc documentation: `http://localhost:8000/redoc`
+## Documentación de la API
 
-## Project Structure
+Una vez que el servidor esté en ejecución, puedes acceder a:
+- Documentación Swagger UI: `http://localhost:8000/docs`
+- Documentación ReDoc: `http://localhost:8000/redoc`
+
+## Estructura del Proyecto
 
 ```
 app/
@@ -101,75 +131,108 @@ app/
 └── main.py
 ```
 
-## API Endpoints
+## Endpoints de la API
 
-### Authentication
-- POST /api/v1/login/access-token - Login and get access token
-- POST /api/v1/login/test-token - Test access token
+### Autenticación
+- POST /api/v1/login/access-token - Iniciar sesión y obtener token de acceso
+- POST /api/v1/login/test-token - Probar token de acceso
 
-### Users
-- POST /api/v1/users/ - Create a new user
-- GET /api/v1/users/ - Get all users
-- GET /api/v1/users/{user_id} - Get a specific user
-- PUT /api/v1/users/{user_id} - Update a user
-- DELETE /api/v1/users/{user_id} - Delete a user
+### Usuarios
+- POST /api/v1/users/ - Crear un nuevo usuario
+- GET /api/v1/users/ - Obtener todos los usuarios
+- GET /api/v1/users/{user_id} - Obtener un usuario específico
+- PUT /api/v1/users/{user_id} - Actualizar un usuario
+- DELETE /api/v1/users/{user_id} - Eliminar un usuario
 
 ### Roles
-- POST /api/v1/roles/ - Create a new role
-- GET /api/v1/roles/ - Get all roles
-- GET /api/v1/roles/{role_id} - Get a specific role
-- PUT /api/v1/roles/{role_id} - Update a role
-- DELETE /api/v1/roles/{role_id} - Delete a role
+- POST /api/v1/roles/ - Crear un nuevo rol
+- GET /api/v1/roles/ - Obtener todos los roles
+- GET /api/v1/roles/{role_id} - Obtener un rol específico
+- PUT /api/v1/roles/{role_id} - Actualizar un rol
+- DELETE /api/v1/roles/{role_id} - Eliminar un rol
 
-### Requests
-- POST /api/v1/requests/ - Create a new request
-- GET /api/v1/requests/ - Get all requests (filtered by user/supervisor)
-- GET /api/v1/requests/{request_id} - Get a specific request
-- PUT /api/v1/requests/{request_id} - Update a request
-- PUT /api/v1/requests/{request_id}/status - Change request status (supervisor only)
-- DELETE /api/v1/requests/{request_id} - Delete a request
-- GET /api/v1/requests/report/csv - Download request report in CSV format
+### Solicitudes
+- POST /api/v1/requests/ - Crear una nueva solicitud
+- GET /api/v1/requests/ - Obtener todas las solicitudes (filtradas por usuario/supervisor)
+- GET /api/v1/requests/{request_id} - Obtener una solicitud específica
+- PUT /api/v1/requests/{request_id} - Actualizar una solicitud
+- PUT /api/v1/requests/{request_id}/status - Cambiar estado de la solicitud (solo supervisores)
+- DELETE /api/v1/requests/{request_id} - Eliminar una solicitud
+- GET /api/v1/requests/report/csv - Descargar reporte de solicitudes en formato CSV
 
-### Comments
-- POST /api/v1/comments/ - Create a new comment
-- GET /api/v1/comments/ - Get all comments
-- GET /api/v1/comments/{comment_id} - Get a specific comment
-- PUT /api/v1/comments/{comment_id} - Update a comment
-- DELETE /api/v1/comments/{comment_id} - Delete a comment
+### Comentarios
+- POST /api/v1/comments/ - Crear un nuevo comentario
+- GET /api/v1/comments/ - Obtener todos los comentarios
+- GET /api/v1/comments/{comment_id} - Obtener un comentario específico
+- PUT /api/v1/comments/{comment_id} - Actualizar un comentario
+- DELETE /api/v1/comments/{comment_id} - Eliminar un comentario
 
-### Audits
-- GET /api/v1/audits/ - Get all audit records
-- GET /api/v1/audits/{audit_id} - Get a specific audit record
+### Auditoría
+- GET /api/v1/audits/ - Obtener todos los registros de auditoría
+- GET /api/v1/audits/{audit_id} - Obtener un registro de auditoría específico
 
-## Request Status Flow
+## Flujo de Estados de las Solicitudes
 
-1. **Created** - Initial state when a request is created
-2. **Pending** - Request is waiting for supervisor review
-3. **Approved** - Request has been approved by supervisor
-4. **Rejected** - Request has been rejected by supervisor
-5. **Completed** - Request has been fulfilled
+1. **Creado** - Estado inicial cuando se crea una solicitud
+2. **Pendiente** - La solicitud está esperando revisión del supervisor
+3. **Aprobado** - La solicitud ha sido aprobada por el supervisor
+4. **Rechazado** - La solicitud ha sido rechazada por el supervisor
+5. **Completado** - La solicitud ha sido cumplida
 
-## Role Permissions
+## Permisos por Rol
 
-- **Admin**: Full access to all endpoints
-- **Supervisor**: Can approve/reject requests, view all requests, and generate reports
-- **User**: Can create and view their own requests
+- **Administrador**: Acceso completo a todos los endpoints
+- **Supervisor**: Puede aprobar/rechazar solicitudes, ver todas las solicitudes y generar reportes
+- **Usuario**: Puede crear y ver sus propias solicitudes
 
-## Report Generation
+## Generación de Reportes
 
-The API provides a CSV report generation feature that includes:
-- Request details
-- User information
-- Status history
-- Comments
-- Audit trail
-- Metrics (days since creation, days until expected date)
+La API proporciona una función de generación de reportes en CSV que incluye:
+- Detalles de la solicitud
+- Información del usuario
+- Historial de estados
+- Comentarios
+- Registro de auditoría
+- Métricas (días desde la creación, días hasta la fecha esperada)
 
-Reports can be filtered by:
-- Date range
-- Status
-- User ID
+Los reportes se pueden filtrar por:
+- Rango de fechas
+- Estado
+- ID de usuario
 
-## License
+## Configuración de Docker
 
-This project is licensed under the MIT License. 
+El proyecto incluye configuración para Docker y Docker Compose:
+
+### Archivos de Configuración
+- `Dockerfile`: Configuración del contenedor de la aplicación
+- `docker-compose.yml`: Configuración de los servicios (aplicación y base de datos)
+- `.env`: Variables de entorno para la configuración
+
+### Comandos Útiles
+```bash
+# Construir las imágenes
+docker-compose build
+
+# Iniciar los contenedores
+docker-compose up -d
+
+# Detener los contenedores
+docker-compose down
+
+# Ver los logs
+docker-compose logs -f
+
+# Reconstruir las imágenes
+docker-compose up --build
+```
+
+### Notas Importantes
+- La base de datos SQL Server se ejecuta en un contenedor separado
+- Los datos de la base de datos persisten en un volumen de Docker
+- La aplicación se reinicia automáticamente cuando se detectan cambios en el código
+- Las variables de entorno se pueden configurar en el archivo `.env`
+
+## Licencia
+
+Este proyecto está licenciado bajo la Licencia MIT. 
