@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
 
     # Database Configuration
-    SQL_SERVER: str = "MSI\SQLEXPRESS"
+    SQL_SERVER: str = "MSI\\SQLEXPRESS"
     SQL_DATABASE: str = "WebApiPurchase"
     SQLALCHEMY_DATABASE_URI: str = f"mssql+pyodbc://{SQL_SERVER}/{SQL_DATABASE}?trusted_connection=yes&driver=ODBC+Driver+17+for+SQL+Server&TrustServerCertificate=yes"
     API_V1_STR: str = '/api/v1'

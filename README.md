@@ -25,7 +25,7 @@ A FastAPI-based REST API for purchase management with user authentication and ro
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/ifbriceno1996br/back-api-web-purchase.git
 cd WebApiPurchase
 ```
 
